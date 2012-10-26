@@ -1,10 +1,11 @@
-\documentclass[12pt]{article}
+\documentclass[10pt]{article}
 
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{graphicx}	% use to include graphics
 \usepackage{verbatim}
 \usepackage{multicol}
 
+\sloppy
 \makeatletter
 \renewcommand\section{\@startsection{section}{1}{\z@}%
 								 {-3.5ex \@plus -1ex \@minus -.2ex}%
@@ -12,41 +13,37 @@
 								 {\normalfont\large\bfseries}}
 \makeatother
 
-\title{Economic Implications of Global Internet Governance}
-\author{
-Colin Scott
-}
+\title{Does Internet connectivity actually spur economic growth?}
+\author{Colin Scott}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% ICANN: in charge of names and addresses. United States Department of
-% Commerce (National Telecommunications and Information Administration)
-% currently has the final say over changes to the DNS root zone.
-
-% IETF: in charge of defining standards
-
-% WGIG: created in reaction to ICANN being American (2003)
-
-% "Domain tax" to support ICANN
-
-% Examples of policy differences:
-%  - developing countries want fettered content cencorship
-
-% Could I use measurements (DNS, perhaps) to inform the cost of
-% addresses/domain names?
 \begin{document}
 \maketitle
 
-The Internetd you do9l
-Internet governance dictates IP address useage, DNS names, etc. These are
-important for X, Y. ICANN has traditionally been in charge of this, but there
-is a recent push to globalize the governance of the Internet [cite].
+Despite sparse empirical data, the ICTD community generally believes that access
+to broadband Internet in developing regions brings about economic growth~\cite{brewer2005case}.
+The only substantial study I know in support of this belief is a World Bank report
+from 2009, which found that a 10 percent increase in broadband penetration
+correlates with a 1.3 percent increase in GDP~\cite{qiang2009economic}. This
+finding was based on an econometric analysis data of the following
+variables: per capita GDP, ratio of
+investment to GDP, primary school enrollment (a proxy for human capital stock),
+and average penetration of broadband services~\footnote{The data was drawn
+from the International Telecommunication Union World
+Telecommunication Indicators Database (2007) and World Bank World Development Indicators Online
+Database (2008) over 120 developing
+and developed countries}.
 
-Perhaps, look at cost of NAT / other address exhaustion for developing
-countries. -> Potential benefits to be had from global governance, non-ASCII
-DNS names, 
+I hypothesize that this finding does not generalize: growth in GDP is not
+strongly affected by broadband Internet penetration (alone). I propose to
+support my hypothesize by performing a similar econometric analysis. I will
+start by performing the same calculations on up-to-date data from the same
+sources to see if
+Quiang's results are corroborated. I will then attempt to examine alternate
+variables and alternate data sources.
 
-Argues that layer 7 is where the standards really effect developing countries.
-Intellectual property burdens developing regions more than developed?
+Regardless of my results, this project
+will inform the motivation of my research interests in deploying broadband
+wireless to rural areas.
 
 \bibliographystyle{ieeetr}
 \bibliography{proposal}
