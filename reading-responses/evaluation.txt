@@ -1,0 +1,65 @@
+I'm going to focus on the debate between Banerjee and Mookherjee, since I
+honestly didn't find the other two papers particularly interesting (we've seen
+many example of failed ICT projects throughout the course, and it's not clear
+to me that these are any different).
+
+The debate between Banerjee and Mookherjee centers around the question of
+whether the development research community should focus their attention on
+theory or empirical analysis.
+
+Mookherjee claims that empirical analysis *without* theoretical backing is
+not productive. He starts by examining historical examples of this same
+debate between theorist and empiricist in other subfields of economics.
+Previously, theorists have argued that experiments without sufficient
+theoretical backing:
+  - have inherent biases
+  - often makes unfounded theoretical assumptions themselves
+  - don't generalize at all, in the sense that they don't serve to confirm or
+    deny any general theoretical framework
+
+As a result of these shortcoming, theorists have argued that the results of
+unfounded experiments often don't show anything beyond a very constrained data
+set that is very hard to interpret.
+
+Mookherjee then argues that sciences often go through four stages of
+development:
+  i. empirical description of phenomena
+  ii. formulation of relevant theory
+  iii. testing of theories
+  iv. use the least unsuccessful theory to make predictions
+
+Mookherjee asserts that the field of development is not prepared to move to
+stage iv. That is, more time should be spent developing theories (which
+engender new ideas). If we hastily move to stage iv., we risk having
+experiments be very limited in scope, only verifying specific interventions,
+and not generalizing to principles of policy.
+
+---
+Abhijit takes the opposite tack, and is largely in favor of focusing our
+efforts on empirical studies.
+
+He first argues for the value of experiments:
+ - our intuitions can't possibly account for all the relevant
+variables (e.g. ring worms turned out to be more problematic for education than
+lack of teachers, something that theorists would never have been able to
+predict).
+ - Being "on the ground" gives researchers a feedback loop with practitioners on the
+   ground, allowing us to refine the parameters of our experiments iteratively.
+
+Abhijit also defends criticisms against empiricism, pointing out that:
+ - the criticisms aren't specific to randomized control trials, and
+ - the criticisms don't engage directly with the valuable aspects of experiments
+
+Discussion:
+ - It's not clear to me that Abhijit arguments in favor of eschewing theory
+   apply to countries that are not at the bottom of the pyramid. We have a
+   much better sense of the involved variables, don't we?
+
+ - All of this debate between theory vs. empiricism seems odd to me. If you
+   look at a mature scientific field like physics, both are clearly necessary,
+   and symbiotic! Why do we need to make a black and white distinction between
+   theory and practice? Moreover, these arguments seem quite childish to me --
+   we're on the same side here!
+
+ - Perhaps Mookherjee is right though; the very fact that we're arguing about
+   this indicates that the field of development is nascent.
