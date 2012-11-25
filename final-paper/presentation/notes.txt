@@ -1,0 +1,48 @@
+ - Question: does broadband Internet connectivity actually spur economic
+   growth?
+
+ - This is the underlying motivation of a number of researchers, including
+   TIER, UCSB, ... TODO(cs): add NGO's, GO's, etc.
+
+ - Data: ITU and World Bank
+
+   - Include graphs of the variables, and mention that you generated those
+     graphs.
+   - BTW, it's awesome data to play with!
+
+ - Model: endogenous growth.
+
+    - Note: I am not an economist! I'm reverse engineering most of what you
+      see here, so feel more than welcome to correct me if I'm misrepresenting
+      something.
+
+ - Initial findings:
+
+ - Shortcomings
+
+/**
+From the paper:
+---------------
+Because demand for telecommunications services rises
+with wealth, the impact of increased telecommunications penetration on
+economic growth and the impact of rising per capita GDP on the demand for
+telecommunications constitute the so-called two-way causality issue.
+Especially in the cases of mobile, Internet, and broadband, where data are
+only available starting 1990 or later (1998 in the case of broadband),
+penetration rates are potentially endogenous. The growth model approach does
+not deal with this problem explicitly—we performed a Hausman test to determine
+whether any reverse causality is present. We used the initial values of
+telecommunications penetrations as the instruments. The null hypothesis of
+ordinary least squares being consistent and efficient could not be rejected
+*/
+
+// TODO(cs):
+// "Penetration rates are potentially endegous". Wat?
+// Hausman test
+// Null hypothesis
+// R^2
+// -1th, -2th, .. indicators
+
+ - Other questions I want to ask given enough time
+   - Just wondering if primary school enrollment is a good proxy for an outcome that seeks to correlate growth with internet penetration. High school might be more relevant? This is a gut feeling and not an informed comment, I must admit.
+   - Also wondering what the cost of 10% broadband penetration might be even if it does "lead to" 1.3% growth; what else might lead to 1.3% growth and is broadband cost-effective in comparison? This is NOT the point of your paper but I think it's worth considering for future ICT-or-not-for-D policy.
