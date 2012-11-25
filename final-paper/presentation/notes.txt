@@ -4,11 +4,17 @@
  - This is the underlying motivation of a number of researchers, including
    TIER, UCSB, ... TODO(cs): add NGO's, GO's, etc.
 
+   - Also drives many policy decisions (citations at begnning of Quiang paper)
+
+ - Previous work: Quiang
+
  - Data: ITU and World Bank
 
    - Include graphs of the variables, and mention that you generated those
      graphs.
    - BTW, it's awesome data to play with!
+   - Note that the purpose of the other variables is largely to discount other
+     hypotheses
 
  - Model: endogenous growth.
 
