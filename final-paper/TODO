@@ -1,6 +1,12 @@
-- TODO(cs):
-- "Penetration rates are potentially endegous". Wat?
-- Hausman test
-- Null hypothesis
-- R^2
-- -1th, -2th, .. indicators
+Econ:
+ - "Penetration rates are potentially endogenous". Wat?
+ - Hausman test
+ - Null hypothesis
+ - R^2
+ - -1th, -2th, .. indicators
+ - 10% stat significance is worse than 1%? Don't understand statistical
+   significance well enough
+
+Data:
+ - Which countries are/aren't developing/developed? -> World Bank country
+   classifications
