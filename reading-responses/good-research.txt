@@ -1,0 +1,39 @@
+
+Burrell and Toyama:
+  - Although I was marginally aware of this before, this paper made it very clear
+    to me how young the field of ICTD is. It seems that the ICTD community has relatively
+    little common agreement on research values and assumptions, and relatively
+    strong and persistent disagreements about the community's goals.
+  - The points of interdisciplinary agreement (and disagreement) outlined in
+    this paper seemed intuitive (it seems that most sciences would agree that
+    these goals are important?)
+  - I personally have not ever been exposed to a multi-disciplinary field such
+    as ICTD. I wonder if it is possible at all for a multi-disciplinary field
+    to become a mature science? It seems (following Kuhn) that a young science
+    requires that the community hold a widely accepted set of assumptions before
+    it can go into the "puzzle-solving" stage of refining those assumptions.
+    Yet in a multi-disciplinary field, there is an inevitable disagreement over
+    the most fundamental assumptions (e.g. realism vs. interpertivism)
+  - That said, perhaps it's not such a bad thing that ICTD may never become a
+    mature science :)
+  - On a tangential note: the epistemology of ICTD is still very unclear to me. It seems that ICTD
+    research often (consciously) conflates two goals:
+      - aiding disadvantaged people
+      - gaining knowledge of human social dynamics
+
+    It's not clear that it's possible to achieve those goals concurrently!
+    Why don't we don't we focus on one or the other? It seems that by focusing
+    on both at once, we may do a poor job of achieving either one.
+
+
+Khalil and Kenny:
+   - I honestly had a hard time distilling a thesis from this paper. It
+     appears to be a smattering of observations about:
+     - the pervasiveness of mobile technology in the developing world
+     - which in turn, implies that most of the growth in deployment is
+       occurring in the developing world
+     - which in turn implies that innovative business models are coming out of
+       the developing world.
+     - yet there are some barriers to innovation, such as antiquated and
+       inefficient wireless spectrum regulation institutions, and lack of
+       competition for backbone bandwidth
