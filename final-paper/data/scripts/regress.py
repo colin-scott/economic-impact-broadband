@@ -1,21 +1,32 @@
-#!/usr/bin/env python
+#!/Library/Frameworks/Python.framework/Versions/7.3/bin/python
+
+# NumPy Correlation:
+# numpy.corrcoef
+# numpy.cov
+# numpy.correlate
 
 # TODO(cs): dunno what these are
+# I think we might be trying to infer these!
 (a_0, a_1, a_2, a_3, a_4, a_5, a_6) = (0,0,0,0,0,0,0)
 
 # Level of real GDP per capita in 1980
+# Code: NY.GDP.PCAP.PP.CD
 GDP_80 = 0
 
-# Average share of investment in GDP for 1980–2006
+# Average share of investment in GDP for 1980-2006
 I_Y_8006 = 0
 
-# Average telecommunications penetration per 100 people over 1980–2006
-TELEPEN_8006
+# Average telecommunications penetration per 100 people over 1980-2006
+TELEPEN_8006 = 0
 
 # Primary school enrollment rate in 1980
+# Code: SE.PRM.ENRR (gross, not net)
+# Alternatively: secondary school: SE.SEC.NENR
+# Tertiary school (university): SE.TER.ENRR
 PRIM_80 = 0
 
 # Dummy variable for countries in the Sub-Saharan Africa Region
+# TODO(cs): why do we need these dummy variables?
 SSA = 0
 
 # Dummy variable for countries in the Latin America and Caribbean Region
@@ -36,6 +47,7 @@ def differentiated_regresssion():
  # created dummy variables, and generated the new variables TELEPENH and
  # TELEPENL (the product of the dummy variables and the telecommunications
  # penetration variables)
+ pass
 
 def tele_regression():
   # Number of main lines
@@ -50,5 +62,3 @@ def tele_regression():
   H = 0
   # Low and middle income countries
   L = 0
-
-# TODO(cs): what is a t-statistic?
