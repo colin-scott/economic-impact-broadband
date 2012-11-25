@@ -1,15 +1,18 @@
  - Question: does broadband Internet connectivity actually spur economic
    growth?
 
+ - What do I mean by that?:
+   - Broadband: "high bandwidth" connections, not just mobile. Enough to watch
+     a video on
+   - Economic growth: GDP
+
  - This is the underlying motivation of a number of researchers, including
    TIER, UCSB, ... TODO(cs): add NGO's, GO's, etc.
-
    - Also drives many policy decisions (citations at begnning of Quiang paper)
 
  - Previous work: Quiang
 
  - Data: ITU and World Bank
-
    - Include graphs of the variables, and mention that you generated those
      graphs.
    - BTW, it's awesome data to play with!
@@ -20,7 +23,8 @@
 
     - Note: I am not an economist! I'm reverse engineering most of what you
       see here, so feel more than welcome to correct me if I'm misrepresenting
-      something.
+      something. -> Slide of 'I have no idea what I'm doing!' dog
+      
 
  - Initial findings:
 
