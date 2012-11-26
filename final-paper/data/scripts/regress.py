@@ -4,6 +4,8 @@
 # numpy.corrcoef
 # numpy.cov
 # numpy.correlate
+#
+# Also: ANOVA
 
 # TODO(cs): dunno what these are
 # I think we might be trying to infer these!
@@ -14,9 +16,11 @@
 GDP_80 = 0
 
 # Average share of investment in GDP for 1980-2006
+# Code: NE.GDI.TOTL.ZS
 I_Y_8006 = 0
 
 # Average telecommunications penetration per 100 people over 1980-2006
+# Code; "Fixed broadband penetration"
 TELEPEN_8006 = 0
 
 # Primary school enrollment rate in 1980
@@ -41,13 +45,13 @@ def basic_regression():
              a_5 * SSA + a_6 * LAC + mu
 
 def differentiated_regresssion():
- # We also divided the sample into developed and develop-
- # ing economies (the latter including both middle-income and low-income
- # countries according to the World Bank country classifications),
- # created dummy variables, and generated the new variables TELEPENH and
- # TELEPENL (the product of the dummy variables and the telecommunications
- # penetration variables)
- pass
+  # We also divided the sample into developed and develop-
+  # ing economies (the latter including both middle-income and low-income
+  # countries according to the World Bank country classifications),
+  # created dummy variables, and generated the new variables TELEPENH and
+  # TELEPENL (the product of the dummy variables and the telecommunications
+  # penetration variables)
+  pass
 
 def tele_regression():
   # Number of main lines
