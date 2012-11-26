@@ -1,3 +1,17 @@
+Instructions:
+  your title; your name(s); your main question/s in the paper (I mean something
+  that ends grammatically with a question mark, not a broad theme of interest);
+  your case / location and *salient* info on case, if you are using a case; your
+  main methods -- data analysis, lit review, both, or, if the paper is a
+  proposal, what methods you think you will use eventually; your expected
+  conclusions; your hoped for contribution. If you have no location or case
+  (e.g. if you are doing a review paper) that's fine. You do not have to prepare
+  one slide per topic I have mentioned, but you want to cover these in your
+  talk. Of course you're thinking -- what does she think? Who would put up a
+  talk without a title and their name? Answer: Many. But now, of course, not
+  you.
+
+Content:
  - Question: does broadband Internet connectivity actually spur economic
    growth?
 
@@ -24,7 +38,6 @@
     - Note: I am not an economist! I'm reverse engineering most of what you
       see here, so feel more than welcome to correct me if I'm misrepresenting
       something. -> Slide of 'I have no idea what I'm doing!' dog
-      
 
  - Initial findings:
 
