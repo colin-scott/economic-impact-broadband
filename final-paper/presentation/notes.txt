@@ -34,7 +34,6 @@ Content:
      hypotheses
 
  - Model: endogenous growth.
-
     - Note: I am not an economist! I'm reverse engineering most of what you
       see here, so feel more than welcome to correct me if I'm misrepresenting
       something. -> Slide of 'I have no idea what I'm doing!' dog
