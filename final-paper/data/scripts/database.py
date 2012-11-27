@@ -9,8 +9,24 @@ import shutil
 import csv
 import StringIO
 
-# cname <-> country name
-# ccode <-> country code
+# `cname' <-> `country name'
+# `ccode' <-> `country code'
+
+WTDNAME2CODE = {
+  "GDP" : "NY.GDP.PCAP.PP.CD",
+  "Investment Share (% of GDP)" : "NE.GDI.TOTL.ZS",
+  "Primary school enrollment rate" : "SE.PRM.ENRR",
+  "Secondary school enrollment rate" : "SE.SEC.NENR",
+}
+
+WTINAME2COLUMN = {
+  # TODO(cs): Internet subscriptions a superset of broadband? Or just dialup?
+  "1000s of fixed Internet subscriptions" : "total_inet",
+  "Internet subscriptions per 100 inhab." : "inet_per_100",
+  "% individuals using Internet" : "inet_percent",
+  "1000s of fixed broadband subscriptions" : "total_broadband",
+  "Broadband subscripts per 100 inhab." : "broadband_per_100",
+}
 
 class Database(object):
   def __init__(self, database_file='grades.sqlite'):
