@@ -36,6 +36,8 @@ unset key
 set ylabel "Value"
 set xlabel "Year"
 
+set xrange [:2012]
+
 # Note that we're leaving out output, title, and plot
 #set output "runtime_graph.pdf"
 #set title "runtime seconds=?, replay duration=?"
