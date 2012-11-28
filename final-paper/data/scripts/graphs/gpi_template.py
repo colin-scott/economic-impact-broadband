@@ -31,10 +31,10 @@ set style line 2 lt rgb "#00A000" lw 2 pt 6
 set style line 3 lt rgb "#5060D0" lw 2 pt 2
 set style line 4 lt rgb "#F25900" lw 2 pt 9
 
-set key top left
+unset key
 
-set ylabel "Number of Remaining Inputs"
-set xlabel "Number of Replays Executed"
+set ylabel "Value"
+set xlabel "Year"
 
 # Note that we're leaving out output, title, and plot
 #set output "runtime_graph.pdf"
