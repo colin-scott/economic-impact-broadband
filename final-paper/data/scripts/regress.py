@@ -30,12 +30,19 @@ def pad_zeros(tuples, start_year):
     new_groups += group
   return new_groups
 
+def verify_country_order(tuples, db):
+  # verify that we use all the same countries, in the same order
+  countries_to_use = db.select_countries_to_use()
+  for key, group in groupby(tuples, lambda t: t[1]):
+    next = countries_to_use.pop(0)
+    if key != next:
+      raise ValueError("Country %s not expected %s" % (key,next,))
+
 def average_datapoints(tuples):
   # Tuples are (year, country, value)
   #  - bucket by country
   #  - compute average per country
   #  - return list of averages
-  # TODO(cs): verify that this keeps the same order of countries
   new_averages = []
   for key, group in groupby(tuples, lambda t: t[1]):
     values = [ t[2] for t in group ]
@@ -53,30 +60,40 @@ def normalize_sample_sizes(datasets):
 
 def get_basic_stats(db):
   # TODO(cs): remove sanity check Quiang's result: filter after 2006
+  # including countries_to_use
   initial_year = 1980
 
   # Average growth rate of real GDP per capita in US$ over 1980-2006
   GDP_8006 = [ tuple for tuple in
                db.select_wdi_stats("NY.GDP.MKTP.KD.ZG")
                if tuple[0] >= 1980 and tuple[0] <= 2006 ]
+  print "Verifying GDP_8006"
+  verify_country_order(GDP_8006, db)
   GDP_8006 = average_datapoints(GDP_8006)
 
   # Level of real GDP per capita in 1980
-  GDP_80 = [ tuple[2] for tuple in
+  GDP_80 = [ tuple for tuple in
              db.select_wdi_stats("NY.GDP.PCAP.KD")
              if tuple[0] == 1980 ]
+  print "Verifying GDP_80"
+  verify_country_order(GDP_80, db)
+  GDP_80 = [ tuple[2] for tuple in GDP_80 ]
 
   # Average share of investment in GDP for 1980-2006
   I_Y_8006 = [ tuple for tuple in
                db.select_wdi_stats("NE.GDI.TOTL.ZS")
                if tuple[0] >= 1980 and tuple[0] <= 2006 ]
+  print "Verifying I_Y_8006"
+  verify_country_order(I_Y_8006, db)
   I_Y_8006 = average_datapoints(I_Y_8006)
 
   # Average telecommunications penetration per 100 people over 1980-2006
-  # TODO(cs): need to ensure that countries are lined up
   TELEPEN_8006 = [ tuple for tuple in
                    db.select_wti_stats("broadband_per_100")
                    if tuple[0] >= 1980 and tuple[0] <= 2006 ]
+  print "Verifying TELEPEN_8006"
+  verify_country_order(TELEPEN_8006, db)
+  # TODO(cs): maybe shouldn't pad zeros?
   TELEPEN_8006 = pad_zeros(TELEPEN_8006, initial_year)
   TELEPEN_8006 = average_datapoints(TELEPEN_8006)
 
@@ -84,9 +101,12 @@ def get_basic_stats(db):
   # Code: SE.PRM.ENRR (gross, not net)
   # Alternatively: secondary school: SE.SEC.NENR
   # Tertiary school (university): SE.TER.ENRR
-  PRIM_80 = [ tuple[2] for tuple in
+  PRIM_80 = [ tuple for tuple in
               db.select_wdi_stats("SE.PRM.ENRR")
               if tuple[0] == 1980 ]
+  print "Verifying PRIM_80"
+  verify_country_order(PRIM_80, db)
+  PRIM_80 = [ tuple[2] for tuple in PRIM_80 ]
 
   min_length = min([len(a) for a in
                     [GDP_8006, GDP_80, I_Y_8006, TELEPEN_8006, PRIM_80]])

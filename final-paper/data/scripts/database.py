@@ -55,7 +55,7 @@ class Database(object):
     cur.execute('''CREATE TABLE IF NOT EXISTS country_classifications '''
                 ''' (cname TEXT, class TEXT)''')
     cur.execute('''CREATE TABLE IF NOT EXISTS countries_to_use '''
-                ''' (cname TEXT)''')
+                ''' (cname TEXT, primary key (cname))''')
     self.populate_countries_to_use()
     self.con.commit()
 
@@ -133,8 +133,25 @@ class Database(object):
                 '''SELECT DISTINCT cname FROM wdi '''
                 ''' WHERE y1980!="" AND icode="NY.GDP.MKTP.KD.ZG"'''
                 ''' INTERSECT '''
-                '''SELECT DISTINCT cname from wti''')
+                '''SELECT DISTINCT cname FROM wdi '''
+                ''' WHERE y1980!="" AND icode="NY.GDP.PCAP.KD"'''
+                ''' INTERSECT '''
+                '''SELECT DISTINCT cname FROM wdi '''
+                ''' WHERE y1980!="" AND icode="NE.GDI.TOTL.ZS"'''
+                ''' INTERSECT '''
+                '''SELECT DISTINCT cname FROM wdi '''
+                ''' WHERE y1980!="" AND icode="SE.PRM.ENRR"'''
+                ''' INTERSECT '''
+                '''SELECT DISTINCT cname from wti '''
+                ''' WHERE broadband_per_100!='' AND '''
+                ''' broadband_per_100 is not null AND '''
+                ''' year <= 2006''') # TODO(cs): remove me
     self.con.commit()
+
+  def select_countries_to_use(self):
+    cur = self.con.cursor()
+    rows = cur.execute('''SELECT * FROM countries_to_use ORDER BY cname''')
+    return [ row[0] for row in rows ]
 
   def close(self):
     self.con.close()
