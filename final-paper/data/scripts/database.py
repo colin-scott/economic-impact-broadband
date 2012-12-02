@@ -54,6 +54,9 @@ class Database(object):
                 ''' broadband_per_100 REAL, primary key (cname, year))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS country_classifications '''
                 ''' (cname TEXT, class TEXT)''')
+    cur.execute('''CREATE TABLE IF NOT EXISTS countries_to_use '''
+                ''' (cname TEXT)''')
+    self.populate_countries_to_use()
     self.con.commit()
 
   def get_distinct_wti_cnames(self):
@@ -99,7 +102,9 @@ class Database(object):
                        '''y2003,y2004,y2005,y2006,'''
                        '''y2007,y2008,y2009,y2010,'''
                        '''y2011,y2012 from wdi '''
-                       ''' WHERE icode=?''', (code,))
+                       ''' WHERE icode=? '''
+                       ''' AND cname in (SELECT * from countries_to_use) '''
+                       ''' ORDER BY cname''', (code,))
     tuples = []
     for row in rows:
       (cname,y1960,y1961,y1962,y1963,y1964,y1965,y1966,y1967,y1968,y1969,y1970,y1971,y1972,y1973,y1974,y1975,y1976,y1977,y1978,y1979,y1980,y1981,y1982,y1983,y1984,y1985,y1986,y1987,y1988,y1989,y1990,y1991,y1992,y1993,y1994,y1995,y1996,y1997,y1998,y1999,y2000,y2001,y2002,y2003,y2004,y2005,y2006,y2007,y2008,y2009,y2010,y2011,y2012) = row
@@ -115,9 +120,21 @@ class Database(object):
 
   def select_wti_stats(self, column):
     cur = self.con.cursor()
-    query = 'SELECT year, cname, %s from wti where %s is not null' % (column, column)
+    query = ('''SELECT year, cname, %s FROM wti WHERE %s is not null '''
+             ''' AND %s!='' AND cname in (SELECT * FROM countries_to_use) '''
+             ''' ORDER BY cname''' % (column, column, column))
     rows = cur.execute(query)
     return list(rows)
+
+  def populate_countries_to_use(self):
+    cur = self.con.cursor()
+    # We select countries that have data, and are common to both datasets
+    cur.execute('''INSERT OR IGNORE INTO countries_to_use '''
+                '''SELECT DISTINCT cname FROM wdi '''
+                ''' WHERE y1980!="" AND icode="NY.GDP.MKTP.KD.ZG"'''
+                ''' INTERSECT '''
+                '''SELECT DISTINCT cname from wti''')
+    self.con.commit()
 
   def close(self):
     self.con.close()

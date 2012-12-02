@@ -22,10 +22,12 @@ def pad_zeros(tuples, start_year):
   for key, group in groupby(tuples, lambda t: t[1]):
     group = sorted(group, key=lambda t: t[0])
     minimum_year = group[0][0]
+    index = 0
     for year in xrange(start_year, minimum_year):
       new_tuple = (year, key, 0)
-      group.insert(0, new_tuple)
-    new_groups.append(group)
+      group.insert(index, new_tuple)
+      index += 1
+    new_groups += group
   return new_groups
 
 def average_datapoints(tuples):
@@ -35,7 +37,6 @@ def average_datapoints(tuples):
   #  - return list of averages
   # TODO(cs): verify that this keeps the same order of countries
   new_averages = []
-  import pdb; pdb.set_trace()
   for key, group in groupby(tuples, lambda t: t[1]):
     values = [ t[2] for t in group ]
     average = scipy.mean(values)
@@ -68,14 +69,14 @@ def get_basic_stats(db):
   # Average share of investment in GDP for 1980-2006
   I_Y_8006 = [ tuple for tuple in
                db.select_wdi_stats("NE.GDI.TOTL.ZS")
-               if tuple[0] >= 1980 and tuple[0] <= 2006]
+               if tuple[0] >= 1980 and tuple[0] <= 2006 ]
   I_Y_8006 = average_datapoints(I_Y_8006)
 
   # Average telecommunications penetration per 100 people over 1980-2006
   # TODO(cs): need to ensure that countries are lined up
   TELEPEN_8006 = [ tuple for tuple in
                    db.select_wti_stats("broadband_per_100")
-                   if tuple[0] >= 1980 and tuple[0] <= 2006]
+                   if tuple[0] >= 1980 and tuple[0] <= 2006 ]
   TELEPEN_8006 = pad_zeros(TELEPEN_8006, initial_year)
   TELEPEN_8006 = average_datapoints(TELEPEN_8006)
 
