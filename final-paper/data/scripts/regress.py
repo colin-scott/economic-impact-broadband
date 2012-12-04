@@ -2,7 +2,6 @@
 
 import ols
 import database
-import random
 from scipy import stats
 import scipy
 from itertools import groupby
@@ -15,6 +14,18 @@ from itertools import groupby
 # Also: ANOVA
 #   scipy.stats.stats.f_oneway
 #   scipy.stats.stats.f_value
+
+def select_classification(db, classification):
+  class2cnames = db.select_class2cnames()
+  ssa_countries = set(class2cnames[classification])
+  countries_to_use = db.select_countries_to_use()
+  dummy = []
+  for country in countries_to_use:
+    if country in ssa_countries:
+      dummy.append(1)
+    else:
+      dummy.append(0)
+  return dummy
 
 def pad_zeros(tuples, start_year):
   # We assume that broadband penetration before first datapoint was zero
@@ -50,23 +61,13 @@ def average_datapoints(tuples):
     new_averages.append(average)
   return new_averages
 
-def normalize_sample_sizes(datasets):
-  new_datasets = []
-  min_length = min([len(a) for a in datasets])
-  for dataset in datasets:
-    subset = random.sample(dataset, min_length)
-    new_datasets.append(subset)
-  return new_datasets
-
-def get_basic_stats(db):
-  # TODO(cs): remove sanity check Quiang's result: filter after 2006
-  # including countries_to_use
+def get_basic_stats(db, max_year=2012):
   initial_year = 1980
 
   # Average growth rate of real GDP per capita in US$ over 1980-2006
   GDP_8006 = [ tuple for tuple in
                db.select_wdi_stats("NY.GDP.MKTP.KD.ZG")
-               if tuple[0] >= 1980 and tuple[0] <= 2006 ]
+               if tuple[0] >= 1980 and tuple[0] <= max_year ]
   print "Verifying GDP_8006"
   verify_country_order(GDP_8006, db)
   GDP_8006 = average_datapoints(GDP_8006)
@@ -82,7 +83,7 @@ def get_basic_stats(db):
   # Average share of investment in GDP for 1980-2006
   I_Y_8006 = [ tuple for tuple in
                db.select_wdi_stats("NE.GDI.TOTL.ZS")
-               if tuple[0] >= 1980 and tuple[0] <= 2006 ]
+               if tuple[0] >= 1980 and tuple[0] <= max_year ]
   print "Verifying I_Y_8006"
   verify_country_order(I_Y_8006, db)
   I_Y_8006 = average_datapoints(I_Y_8006)
@@ -90,7 +91,7 @@ def get_basic_stats(db):
   # Average telecommunications penetration per 100 people over 1980-2006
   TELEPEN_8006 = [ tuple for tuple in
                    db.select_wti_stats("broadband_per_100")
-                   if tuple[0] >= 1980 and tuple[0] <= 2006 ]
+                   if tuple[0] >= 1980 and tuple[0] <= max_year ]
   print "Verifying TELEPEN_8006"
   verify_country_order(TELEPEN_8006, db)
   # TODO(cs): maybe shouldn't pad zeros?
@@ -108,29 +109,20 @@ def get_basic_stats(db):
   verify_country_order(PRIM_80, db)
   PRIM_80 = [ tuple[2] for tuple in PRIM_80 ]
 
-  min_length = min([len(a) for a in
-                    [GDP_8006, GDP_80, I_Y_8006, TELEPEN_8006, PRIM_80]])
-
   # Dummy variable for countries in the Sub-Saharan Africa Region
-  # TODO(cs): I believe these are 1 if the country is in the region, 0
-  # otherwise. This implies that there are exactly 120 data points! (she
-  # collapsed the years into averages)
-  #SSA = [1] * min_length
+  SSA = select_classification(db, "ssa")
+  # Dummy variable for countries in the Latin America and Caribbean Region
+  LAC = select_classification(db, "lac")
+  return [GDP_8006, GDP_80, I_Y_8006, TELEPEN_8006, PRIM_80, SSA, LAC]
 
-  ## Dummy variable for countries in the Latin America and Caribbean Region
-  #LAC = [1] * min_length
-  return [GDP_8006, GDP_80, I_Y_8006, TELEPEN_8006, PRIM_80] #, SSA, LAC]
-
-def regress_basic(db):
-  datasets = get_basic_stats(db)
-
-  datasets = normalize_sample_sizes(datasets)
+def regress_basic(db, max_year=2012):
+  datasets = get_basic_stats(db, max_year=max_year)
   GDP_8006 = scipy.array(datasets[0])
   independent_variables = scipy.array(datasets[1:])
   independent_variables = scipy.transpose(independent_variables)
 
   model = ols.ols(GDP_8006,independent_variables,
-                  'GDP_8006',['GDP_80', 'I_Y','TELEPEN','PRIM'])#,'SSA','LAC'])
+                  'GDP_8006',['GDP_80', 'I_Y','TELEPEN','PRIM','SSA','LAC'])
   model.summary()
 
   # ANOVA:
@@ -139,14 +131,22 @@ def regress_basic(db):
   #print f_val
   #print p_val
 
-def differentiated_regresssion(db):
+def differentiated_regresssion(db, max_year=2012):
   # We also divided the sample into developed and develop-
   # ing economies (the latter including both middle-income and low-income
   # countries according to the World Bank country classifications),
   # created dummy variables, and generated the new variables TELEPENH and
   # TELEPENL (the product of the dummy variables and the telecommunications
   # penetration variables)
-  pass
+  datasets = get_basic_stats(db, max_year=max_year)
+  GDP_8006 = scipy.array(datasets[0])
+  independent_variables = scipy.array(datasets[1:])
+  independent_variables = scipy.transpose(independent_variables)
+
+  model = ols.ols(GDP_8006,independent_variables,
+                  'GDP_8006',['GDP_80', 'I_Y','TELEPEN','PRIM','SSA','LAC'])
+  model.summary()
+
 
 def tele_regression(db):
   # Number of main lines
@@ -173,7 +173,7 @@ if __name__ == '__main__':
   db = None
   try:
     db = database.Database(args.db_file)
-    regress_basic(db)
+    regress_basic(db, max_year=2006)
   finally:
     if db:
       db.close()

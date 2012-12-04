@@ -47,16 +47,16 @@ class Database(object):
                 '''INTEGER,y1996 INTEGER,y1997 INTEGER,y1998 INTEGER,y1999 INTEGER,y2000'''
                 '''INTEGER,y2001 INTEGER,y2002 INTEGER,y2003 INTEGER,y2004 INTEGER,y2005'''
                 '''INTEGER,y2006 INTEGER,y2007 INTEGER,y2008 INTEGER,y2009 INTEGER,y2010'''
-                '''INTEGER,y2011 INTEGqER,y2012 INTEGER,'''
+                '''INTEGER,y2011 INTEGER,y2012 INTEGER,'''
                 '''primary key (cname, ccode, iname, icode))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS wti (cname TEXT, year INTEGER, total_inet'''
                 ''' REAL, inet_per_100 REAL, inet_percent REAL, total_broadband REAL, '''
                 ''' broadband_per_100 REAL, primary key (cname, year))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS country_classifications '''
-                ''' (cname TEXT, class TEXT)''')
+                ''' (cname TEXT, class TEXT, primary key (cname, class))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS countries_to_use '''
                 ''' (cname TEXT, primary key (cname))''')
-    self.populate_countries_to_use()
+    #self.populate_countries_to_use()
     self.con.commit()
 
   def get_distinct_wti_cnames(self):
@@ -77,14 +77,23 @@ class Database(object):
                 (country, classification,))
     self.con.commit()
 
-  def select_country_classifications(self):
+  def select_cname2classes(self):
     cur = self.con.cursor()
     rows = cur.execute('''SELECT cname, class from country_classifications ''')
-    cname2class = {}
+    cname2classes = collections.defaultdict(list)
     for row in rows:
       (cname, classification) = row
-      cname2class[cname] = classification
-    return cname2class
+      cname2classes[cname].append(classification)
+    return cname2classes
+
+  def select_class2cnames(self):
+    cur = self.con.cursor()
+    rows = cur.execute('''SELECT cname, class from country_classifications ''')
+    class2cnames = collections.defaultdict(list)
+    for row in rows:
+      (cname, classification) = row
+      class2cnames[classification].append(cname)
+    return class2cnames
 
   def select_wdi_stats(self, code):
     cur = self.con.cursor()
