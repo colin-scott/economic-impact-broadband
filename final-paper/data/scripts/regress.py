@@ -131,7 +131,7 @@ def regress_basic(db, max_year=2012):
   #print f_val
   #print p_val
 
-def differentiated_regresssion(db, max_year=2012):
+def differentiated_regression(db, max_year=2012):
   # We also divided the sample into developed and develop-
   # ing economies (the latter including both middle-income and low-income
   # countries according to the World Bank country classifications),
@@ -139,14 +139,18 @@ def differentiated_regresssion(db, max_year=2012):
   # TELEPENL (the product of the dummy variables and the telecommunications
   # penetration variables)
   datasets = get_basic_stats(db, max_year=max_year)
+  high_income = select_classification(db, "high")
+  datasets.append(high_income)
+  # TODO(cs): tried adding in low income too, but that totally throws off the
+  # results
   GDP_8006 = scipy.array(datasets[0])
   independent_variables = scipy.array(datasets[1:])
   independent_variables = scipy.transpose(independent_variables)
 
   model = ols.ols(GDP_8006,independent_variables,
-                  'GDP_8006',['GDP_80', 'I_Y','TELEPEN','PRIM','SSA','LAC'])
+                  'GDP_8006',['GDP_80', 'I_Y','TELEPEN','PRIM','SSA','LAC',
+                              'H'])
   model.summary()
-
 
 def tele_regression(db):
   # Number of main lines
@@ -174,6 +178,7 @@ if __name__ == '__main__':
   try:
     db = database.Database(args.db_file)
     regress_basic(db, max_year=2006)
+    differentiated_regression(db, max_year=2006)
   finally:
     if db:
       db.close()
