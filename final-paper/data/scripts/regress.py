@@ -27,7 +27,7 @@ def select_classification(db, classification):
       dummy.append(0)
   return dummy
 
-def pad_zeros(tuples, start_year):
+def pad(tuples, start_year):
   # We assume that broadband penetration before first datapoint was zero
   new_groups = []
   for key, group in groupby(tuples, lambda t: t[1]):
@@ -61,7 +61,7 @@ def average_datapoints(tuples):
     new_averages.append(average)
   return new_averages
 
-def get_basic_stats(db, max_year=2012):
+def get_basic_stats(db, pad_zeros=True, max_year=2012):
   initial_year = 1980
 
   # Average growth rate of real GDP per capita in US$ over 1980-2006
@@ -94,8 +94,8 @@ def get_basic_stats(db, max_year=2012):
                    if tuple[0] >= 1980 and tuple[0] <= max_year ]
   print "Verifying TELEPEN_8006"
   verify_country_order(TELEPEN_8006, db)
-  # TODO(cs): maybe shouldn't pad zeros?
-  TELEPEN_8006 = pad_zeros(TELEPEN_8006, initial_year)
+  if pad_zeros:
+    TELEPEN_8006 = pad(TELEPEN_8006, initial_year)
   TELEPEN_8006 = average_datapoints(TELEPEN_8006)
 
   # Primary school enrollment rate in 1980
@@ -115,8 +115,8 @@ def get_basic_stats(db, max_year=2012):
   LAC = select_classification(db, "lac")
   return [GDP_8006, GDP_80, I_Y_8006, TELEPEN_8006, PRIM_80, SSA, LAC]
 
-def regress_basic(db, max_year=2012):
-  datasets = get_basic_stats(db, max_year=max_year)
+def regress_basic(db, pad_zeros=True, max_year=2012):
+  datasets = get_basic_stats(db, pad_zeros=pad_zeros, max_year=max_year)
   GDP_8006 = scipy.array(datasets[0])
   independent_variables = scipy.array(datasets[1:])
   independent_variables = scipy.transpose(independent_variables)
@@ -131,14 +131,14 @@ def regress_basic(db, max_year=2012):
   #print f_val
   #print p_val
 
-def differentiated_regression(db, max_year=2012):
+def differentiated_regression(db, pad_zeros=True, max_year=2012):
   # We also divided the sample into developed and develop-
   # ing economies (the latter including both middle-income and low-income
   # countries according to the World Bank country classifications),
   # created dummy variables, and generated the new variables TELEPENH and
   # TELEPENL (the product of the dummy variables and the telecommunications
   # penetration variables)
-  datasets = get_basic_stats(db, max_year=max_year)
+  datasets = get_basic_stats(db, pad_zeros=pad_zeros, max_year=max_year)
   high_income = select_classification(db, "high")
   datasets.append(high_income)
   # TODO(cs): tried adding in low income too, but that totally throws off the
@@ -177,8 +177,10 @@ if __name__ == '__main__':
   db = None
   try:
     db = database.Database(args.db_file)
-    regress_basic(db, max_year=2006)
-    differentiated_regression(db, max_year=2006)
+    for pad_zeros in [True, False]:
+      print "Pad zeros: ", pad_zeros
+      regress_basic(db, pad_zeros=pad_zeros, max_year=2006)
+      differentiated_regression(db, pad_zeros=pad_zeros, max_year=2006)
   finally:
     if db:
       db.close()
