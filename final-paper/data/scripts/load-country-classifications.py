@@ -3,21 +3,24 @@
 import os
 import glob
 import database
+import collections
 
 def get_classifications():
   os.chdir('../country-classifications/')
-  cname2class = {}
+  cname2classes = collections.defaultdict(list)
   for filename in glob.glob("*"):
+    print "filename", filename
     classification = filename
     with open(filename) as file:
       for line in file:
         cname = line.rstrip()
-        cname2class[cname] = classification
-  return cname2class
+        cname2classes[cname].append(classification)
+  return cname2classes
 
-def load_classifications(db, cname2class):
-  for cname, classification in cname2class.iteritems():
-    db.insert_country_classification(cname, classification)
+def load_classifications(db, cname2classes):
+  for cname, classes in cname2classes.iteritems():
+    for classificication in classes:
+      db.insert_country_classification(cname, classificication)
 
 if __name__ == '__main__':
   import argparse
@@ -30,8 +33,8 @@ if __name__ == '__main__':
   db = None
   try:
     db = database.Database(args.db_file)
-    cname2class = get_classifications()
-    load_classifications(db, cname2class)
+    cname2classes = get_classifications()
+    load_classifications(db, cname2classes)
   finally:
     if db:
       db.close()
