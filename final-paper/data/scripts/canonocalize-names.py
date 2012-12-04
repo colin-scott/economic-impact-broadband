@@ -16,6 +16,7 @@ exact_matches = {
   "Congo (Dem. Rep.)": "Congo, Dem. Rep.",
   "Congo": "Congo, Rep.",
   "Central African Rep.": "Central African Republic",
+  "Venezuela": "Venezuela, RB",
 }
 
 regexes = {
