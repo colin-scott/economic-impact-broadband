@@ -61,7 +61,7 @@ def average_datapoints(tuples):
     new_averages.append(average)
   return new_averages
 
-def get_basic_stats(db, pad_zeros=True, max_year=2012):
+def get_basic_stats(db, tech_metric, pad_zeros=True, max_year=2012):
   initial_year = 1980
 
   # Average growth rate of real GDP per capita in US$ over 1980-2006
@@ -89,14 +89,17 @@ def get_basic_stats(db, pad_zeros=True, max_year=2012):
   I_Y_8006 = average_datapoints(I_Y_8006)
 
   # Average telecommunications penetration per 100 people over 1980-2006
-  TELEPEN_8006 = [ tuple for tuple in
-                   db.select_wti_stats("broadband_per_100")
-                   if tuple[0] >= 1980 and tuple[0] <= max_year ]
-  print "Verifying TELEPEN_8006"
-  verify_country_order(TELEPEN_8006, db)
-  if pad_zeros:
-    TELEPEN_8006 = pad(TELEPEN_8006, initial_year)
-  TELEPEN_8006 = average_datapoints(TELEPEN_8006)
+  if tech_metric is not None:
+    TELEPEN_8006 = [ tuple for tuple in
+                     db.select_wti_stats(tech_metric)
+                     if tuple[0] >= 1980 and tuple[0] <= max_year ]
+    print "Verifying TELEPEN_8006"
+    # TODO(cs): fill in zeros for countries that are missing. Alternatively,
+    # just list the # of countries used, as in Quiang's -1 table!
+    verify_country_order(TELEPEN_8006, db)
+    if pad_zeros:
+      TELEPEN_8006 = pad(TELEPEN_8006, initial_year)
+    TELEPEN_8006 = average_datapoints(TELEPEN_8006)
 
   # Primary school enrollment rate in 1980
   # Code: SE.PRM.ENRR (gross, not net)
@@ -115,14 +118,15 @@ def get_basic_stats(db, pad_zeros=True, max_year=2012):
   LAC = select_classification(db, "lac")
   return [GDP_8006, GDP_80, I_Y_8006, TELEPEN_8006, PRIM_80, SSA, LAC]
 
-def regress_basic(db, pad_zeros=True, max_year=2012):
-  datasets = get_basic_stats(db, pad_zeros=pad_zeros, max_year=max_year)
+def regress_basic(db, tech_metric, pad_zeros=True, max_year=2012):
+  datasets = get_basic_stats(db, tech_metric, pad_zeros=pad_zeros, max_year=max_year)
   GDP_8006 = scipy.array(datasets[0])
   independent_variables = scipy.array(datasets[1:])
   independent_variables = scipy.transpose(independent_variables)
 
+  names = get_names(tech_metric)
   model = ols.ols(GDP_8006,independent_variables,
-                  'GDP_8006',['GDP_80', 'I_Y','TELEPEN','PRIM','SSA','LAC'])
+                  'GDP_8006',names)
   model.summary()
 
   # ANOVA:
@@ -131,40 +135,34 @@ def regress_basic(db, pad_zeros=True, max_year=2012):
   #print f_val
   #print p_val
 
-def differentiated_regression(db, pad_zeros=True, max_year=2012):
+def differentiated_regression(db, tech_metric, pad_zeros=True, max_year=2012):
   # We also divided the sample into developed and develop-
   # ing economies (the latter including both middle-income and low-income
   # countries according to the World Bank country classifications),
   # created dummy variables, and generated the new variables TELEPENH and
   # TELEPENL (the product of the dummy variables and the telecommunications
   # penetration variables)
-  datasets = get_basic_stats(db, pad_zeros=pad_zeros, max_year=max_year)
+  datasets = get_basic_stats(db, tech_metric, pad_zeros=pad_zeros, max_year=max_year)
   high_income = select_classification(db, "high")
   datasets.append(high_income)
   # TODO(cs): tried adding in low income too, but that totally throws off the
-  # results
+  #           results
   GDP_8006 = scipy.array(datasets[0])
   independent_variables = scipy.array(datasets[1:])
   independent_variables = scipy.transpose(independent_variables)
 
+  names = get_names(tech_metric)
   model = ols.ols(GDP_8006,independent_variables,
-                  'GDP_8006',['GDP_80', 'I_Y','TELEPEN','PRIM','SSA','LAC',
-                              'H'])
+                  'GDP_8006',names)
   model.summary()
 
-def tele_regression(db):
-  # Number of main lines
-  FIXED = 0
-  # Number of mobile suscribers
-  MOBILE = 0
-  # Number of Internet users
-  INTERNET = 0
-  # Number of Broadband susccribers
-  BBND = 0
-  # High-income countries
-  H = 0
-  # Low and middle income countries
-  L = 0
+def get_names(tech_metric):
+  if tech_metric is not None:
+    names = ['GDP_80','I_Y',tech_metric,'PRIM','SSA','LAC']
+  else:
+    names = ['GDP_80','I_Y','PRIM','SSA','LAC']
+  return names
+
 
 if __name__ == '__main__':
   import argparse
@@ -177,10 +175,16 @@ if __name__ == '__main__':
   db = None
   try:
     db = database.Database(args.db_file)
-    for pad_zeros in [True, False]:
-      print "Pad zeros: ", pad_zeros
-      regress_basic(db, pad_zeros=pad_zeros, max_year=2006)
-      differentiated_regression(db, pad_zeros=pad_zeros, max_year=2006)
+    # FIXED - Number of main lines - "inet_per_100"
+    # MOBILE - Number of mobile suscribers - "mobile_per_100"
+    # INTERNET - Number of Internet users - "inter_percent"
+    # BBND - Number of Broadband susccribers - "broadband_per_100"
+    for tech_metric in ["inet_per_100", "broadband_per_100",
+                        "mobile_per_100"]:
+      for pad_zeros in [True, False]:
+        print "Pad zeros: ", pad_zeros
+        regress_basic(db, tech_metric, pad_zeros=pad_zeros, max_year=2006)
+        differentiated_regression(db, tech_metric, pad_zeros=pad_zeros, max_year=2006)
   finally:
     if db:
       db.close()

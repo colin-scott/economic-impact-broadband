@@ -57,7 +57,6 @@ class Database(object):
                 ''' (cname TEXT, class TEXT, primary key (cname, class))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS countries_to_use '''
                 ''' (cname TEXT, primary key (cname))''')
-    #self.populate_countries_to_use()
     self.con.commit()
 
   def get_distinct_wti_cnames(self):
@@ -136,9 +135,10 @@ class Database(object):
     rows = cur.execute(query)
     return list(rows)
 
-  def populate_countries_to_use(self):
+  def populate_countries_to_use(self, max_year=2012):
     cur = self.con.cursor()
     # We select countries that have data, and are common to both datasets
+    cur.execute('''DELETE FROM countries_to_use''')
     cur.execute('''INSERT OR IGNORE INTO countries_to_use '''
                 '''SELECT DISTINCT cname FROM wdi '''
                 ''' WHERE y1980!="" AND icode="NY.GDP.MKTP.KD.ZG"'''
@@ -155,7 +155,7 @@ class Database(object):
                 '''SELECT DISTINCT cname from wti '''
                 ''' WHERE broadband_per_100!='' AND '''
                 ''' broadband_per_100 is not null AND '''
-                ''' year <= 2006''') # TODO(cs): remove me
+                ''' year <= ?''', (max_year))
     self.con.commit()
 
   def select_countries_to_use(self):
