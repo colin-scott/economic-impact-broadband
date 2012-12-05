@@ -51,7 +51,8 @@ class Database(object):
                 '''primary key (cname, ccode, iname, icode))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS wti (cname TEXT, year INTEGER, total_inet'''
                 ''' REAL, inet_per_100 REAL, inet_percent REAL, total_broadband REAL, '''
-                ''' broadband_per_100 REAL, primary key (cname, year))''')
+                ''' broadband_per_100 REAL, mobile_per_100 REAL, '''
+                ''' total_mobile REAL, primary key (cname, year))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS country_classifications '''
                 ''' (cname TEXT, class TEXT, primary key (cname, class))''')
     cur.execute('''CREATE TABLE IF NOT EXISTS countries_to_use '''
@@ -165,3 +166,17 @@ class Database(object):
   def close(self):
     self.con.close()
 
+if __name__ == '__main__':
+  import argparse
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-s', '--sqlite-file',
+                      default="../data.sqlite", dest="db_file",
+                      help='''sqlite grading database file''')
+  args = parser.parse_args()
+
+  db = None
+  try:
+    db = Database(args.db_file)
+  finally:
+    if db:
+      db.close()

@@ -17,7 +17,7 @@ def sanitize_value(v):
   except ValueError:
     return None
 
-os.chdir('../WTI/')
+os.chdir('../WTI/broadband')
 for csv_filename in glob.glob("*csv"):
   # Example: 2001_data.csv
   year = int(csv_filename.split("_")[0])
@@ -29,7 +29,8 @@ for csv_filename in glob.glob("*csv"):
        broadband_per_100) = map(sanitize_value,
                                 [total_inet, inet_per_100, inet_percent,
                                  total_broadband, broadband_per_100])
-      cur.execute('''INSERT INTO wti VALUES (?,?,?,?,?,?,?)''',
+      cur.execute('''INSERT INTO wti (cname, year, total_inet, inet_per_100, '''
+                  ''' inet_percent, total_broadband, broadband_per_100) VALUES (?,?,?,?,?,?,?)''',
                   (cname, year, total_inet, inet_per_100, inet_percent, total_broadband,
                    broadband_per_100))
 

@@ -27,7 +27,7 @@ def canonicalize(db):
   names = db.get_distinct_wti_cnames()
   for name in names:
     if name.rstrip() in exact_matches:
-      # O(n^2), but I don't care
+      # o(n^2), but i don't care
       db.change_wti_cname(name, exact_matches[name])
 
     for regex, replace in regexes.iteritems():
