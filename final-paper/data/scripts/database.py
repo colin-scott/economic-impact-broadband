@@ -135,27 +135,29 @@ class Database(object):
     rows = cur.execute(query)
     return list(rows)
 
-  def populate_countries_to_use(self, max_year=2012):
+  def populate_countries_to_use(self, tech_metric, max_year=2012):
     cur = self.con.cursor()
     # We select countries that have data, and are common to both datasets
     cur.execute('''DELETE FROM countries_to_use''')
-    cur.execute('''INSERT OR IGNORE INTO countries_to_use '''
-                '''SELECT DISTINCT cname FROM wdi '''
-                ''' WHERE y1980!="" AND icode="NY.GDP.MKTP.KD.ZG"'''
-                ''' INTERSECT '''
-                '''SELECT DISTINCT cname FROM wdi '''
-                ''' WHERE y1980!="" AND icode="NY.GDP.PCAP.KD"'''
-                ''' INTERSECT '''
-                '''SELECT DISTINCT cname FROM wdi '''
-                ''' WHERE y1980!="" AND icode="NE.GDI.TOTL.ZS"'''
-                ''' INTERSECT '''
-                '''SELECT DISTINCT cname FROM wdi '''
-                ''' WHERE y1980!="" AND icode="SE.PRM.ENRR"'''
-                ''' INTERSECT '''
-                '''SELECT DISTINCT cname from wti '''
-                ''' WHERE broadband_per_100!='' AND '''
-                ''' broadband_per_100 is not null AND '''
-                ''' year <= ?''', (max_year))
+    # TODO(cs): perhaps 1980 is too soon? [might find more datapoints if 2006
+    query = ('''INSERT OR IGNORE INTO countries_to_use '''
+             '''SELECT DISTINCT cname FROM wdi '''
+             ''' WHERE y1980!="" AND icode="NY.GDP.MKTP.KD.ZG"'''
+             ''' INTERSECT '''
+             '''SELECT DISTINCT cname FROM wdi '''
+             ''' WHERE y1980!="" AND icode="NY.GDP.PCAP.KD"'''
+             ''' INTERSECT '''
+             '''SELECT DISTINCT cname FROM wdi '''
+             ''' WHERE y1980!="" AND icode="NE.GDI.TOTL.ZS"'''
+             ''' INTERSECT '''
+             '''SELECT DISTINCT cname FROM wdi '''
+             ''' WHERE y1980!="" AND icode="SE.PRM.ENRR"'''
+             ''' INTERSECT '''
+             '''SELECT DISTINCT cname from wti '''
+             ''' WHERE %s!='' AND '''
+             ''' %s is not null AND '''
+             ''' year <= ?''' % (tech_metric, tech_metric))
+    cur.execute(query, (max_year,))
     self.con.commit()
 
   def select_countries_to_use(self):

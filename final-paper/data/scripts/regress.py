@@ -2,6 +2,7 @@
 
 import ols
 import database
+import sys
 from scipy import stats
 import scipy
 from itertools import groupby
@@ -63,12 +64,13 @@ def average_datapoints(tuples):
 
 def get_basic_stats(db, tech_metric, pad_zeros=True, max_year=2012):
   initial_year = 1980
+  db.populate_countries_to_use(tech_metric, max_year=max_year)
 
   # Average growth rate of real GDP per capita in US$ over 1980-2006
   GDP_8006 = [ tuple for tuple in
                db.select_wdi_stats("NY.GDP.MKTP.KD.ZG")
                if tuple[0] >= 1980 and tuple[0] <= max_year ]
-  print "Verifying GDP_8006"
+  sys.stderr.write("Verifying GDP_8006\n")
   verify_country_order(GDP_8006, db)
   GDP_8006 = average_datapoints(GDP_8006)
 
@@ -76,7 +78,7 @@ def get_basic_stats(db, tech_metric, pad_zeros=True, max_year=2012):
   GDP_80 = [ tuple for tuple in
              db.select_wdi_stats("NY.GDP.PCAP.KD")
              if tuple[0] == 1980 ]
-  print "Verifying GDP_80"
+  sys.stderr.write("Verifying GDP_80\n")
   verify_country_order(GDP_80, db)
   GDP_80 = [ tuple[2] for tuple in GDP_80 ]
 
@@ -84,7 +86,7 @@ def get_basic_stats(db, tech_metric, pad_zeros=True, max_year=2012):
   I_Y_8006 = [ tuple for tuple in
                db.select_wdi_stats("NE.GDI.TOTL.ZS")
                if tuple[0] >= 1980 and tuple[0] <= max_year ]
-  print "Verifying I_Y_8006"
+  sys.stderr.write("Verifying I_Y_8006\n")
   verify_country_order(I_Y_8006, db)
   I_Y_8006 = average_datapoints(I_Y_8006)
 
@@ -93,7 +95,7 @@ def get_basic_stats(db, tech_metric, pad_zeros=True, max_year=2012):
     TELEPEN_8006 = [ tuple for tuple in
                      db.select_wti_stats(tech_metric)
                      if tuple[0] >= 1980 and tuple[0] <= max_year ]
-    print "Verifying TELEPEN_8006"
+    sys.stderr.write("Verifying TELEPEN_8006\n")
     # TODO(cs): fill in zeros for countries that are missing. Alternatively,
     # just list the # of countries used, as in Quiang's -1 table!
     verify_country_order(TELEPEN_8006, db)
@@ -108,7 +110,7 @@ def get_basic_stats(db, tech_metric, pad_zeros=True, max_year=2012):
   PRIM_80 = [ tuple for tuple in
               db.select_wdi_stats("SE.PRM.ENRR")
               if tuple[0] == 1980 ]
-  print "Verifying PRIM_80"
+  sys.stderr.write("Verifying PRIM_80\n")
   verify_country_order(PRIM_80, db)
   PRIM_80 = [ tuple[2] for tuple in PRIM_80 ]
 
@@ -127,6 +129,7 @@ def regress_basic(db, tech_metric, pad_zeros=True, max_year=2012):
   names = get_names(tech_metric)
   model = ols.ols(GDP_8006,independent_variables,
                   'GDP_8006',names)
+  print "# Countries: %d" % len(db.select_countries_to_use())
   model.summary()
 
   # ANOVA:
@@ -154,6 +157,7 @@ def differentiated_regression(db, tech_metric, pad_zeros=True, max_year=2012):
   names = get_names(tech_metric)
   model = ols.ols(GDP_8006,independent_variables,
                   'GDP_8006',names)
+  print "# Countries: %d" % len(db.select_countries_to_use())
   model.summary()
 
 def get_names(tech_metric):
@@ -162,7 +166,6 @@ def get_names(tech_metric):
   else:
     names = ['GDP_80','I_Y','PRIM','SSA','LAC']
   return names
-
 
 if __name__ == '__main__':
   import argparse
@@ -175,16 +178,19 @@ if __name__ == '__main__':
   db = None
   try:
     db = database.Database(args.db_file)
-    # FIXED - Number of main lines - "inet_per_100"
-    # MOBILE - Number of mobile suscribers - "mobile_per_100"
-    # INTERNET - Number of Internet users - "inter_percent"
-    # BBND - Number of Broadband susccribers - "broadband_per_100"
-    for tech_metric in ["inet_per_100", "broadband_per_100",
-                        "mobile_per_100"]:
-      for pad_zeros in [True, False]:
-        print "Pad zeros: ", pad_zeros
-        regress_basic(db, tech_metric, pad_zeros=pad_zeros, max_year=2006)
-        differentiated_regression(db, tech_metric, pad_zeros=pad_zeros, max_year=2006)
+    for max_year in [2006, 2011]:
+      # FIXED - Number of main lines - "inet_per_100"
+      # MOBILE - Number of mobile suscribers - "mobile_per_100"
+      # INTERNET - Number of Internet users - "inter_percent"
+      # BBND - Number of Broadband susccribers - "broadband_per_100"
+      for tech_metric in ["inet_per_100", "broadband_per_100",
+                          "mobile_per_100"]:
+        for pad_zeros in [True, False]:
+          print "Max year: ", max_year
+          print "Pad zeros: ", pad_zeros
+          print "Tech metric: ", tech_metric
+          regress_basic(db, tech_metric, pad_zeros=pad_zeros, max_year=max_year)
+          differentiated_regression(db, tech_metric, pad_zeros=pad_zeros, max_year=max_year)
   finally:
     if db:
       db.close()
