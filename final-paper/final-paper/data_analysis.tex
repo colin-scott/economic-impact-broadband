@@ -1,0 +1,52 @@
+\section{Data And Methodology}
+\label{sec:data_and_methodology}
+
+In this section I overview the data sources used, any preprocessing and sanity
+checks I performed, and the methodology used to perform the econometric
+analysis.
+
+\subsection{Data Sources}
+
+Two major sources:
+\begin{enumerate}
+\item The International Telecommunication Union World Telecommunication Indicators
+Database, from 2001-2011~\cite{itu}.
+\item The World Bank World Development Indicators Online Database, from
+1980-2011~\cite{wdi}.
+\end{enumerate}
+
+Any touching up / sanity checking I needed to do to the data
+
+Some processing on names was needed to canonacalize across the two datasets.
+
+NOTE: see scripts/README for additional notes on data analysis
+
+- Country classifications are taken from the World
+Bank. http://data.worldbank.org/income-level/NOC
+TODO: Citation
+
+The code used to perform this analysis is publicly available~\cite{github}.
+
+\subsection{Methodology}
+
+Econometric regression over 6 variables.
+Across 120 countries.
+Bucketed into low/middle/high income.
+
+Dependent variable: GDP.
+
+Independent variables:
+\begin{enumerate}
+\item Average broadband penetration per 100 people.
+\item GDP per capita in 1980.
+\item Ratio of gross investment to GDP.
+\item Primary school enrollment (human capital).
+\item Dummy variable for countries in Sub-Saharan Africa
+\item Dummy variable for countries in Latin America / Caribbean
+\end{enumerate}
+
+These variables were chosen based on an Endogenous Growth Model.
+Explain all the things I learned about growth models (why I didn't use an
+exogenous model, etc.)
+
+Fancy math equation for endogenous growth.

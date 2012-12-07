@@ -6,4 +6,4 @@ all:
 		pdflatex final-paper.tex
 
 clean:
-		rm *pdf *bbl *aux *log *blg *bak
+		rm -f *pdf *bbl *aux *log *blg *bak
