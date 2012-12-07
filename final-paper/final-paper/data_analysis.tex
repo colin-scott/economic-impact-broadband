@@ -1,31 +1,45 @@
 \section{Data And Methodology}
 \label{sec:data_and_methodology}
 
-In this section I overview the data sources used, any preprocessing and sanity
-checks I performed, and the methodology used to perform the econometric
-analysis.
+Given the large number of sociological reasons why broadband should impact
+economic growth in theory, it seems that we should be able to quantitatively
+measure the actual impact over the decade of broadband's use. The largest study I
+know of that performed such an analysis on a large scale,
+the World Bank study~\cite{qiang2009economic}, used data from 2007.
+In this section I describe the data sources used in that study in detail,
+cover my own use of those same data sources including preprocessing and sanity
+checks, and describe the methodology I used to corroborate and update
+the World Bank's result.
 
 \subsection{Data Sources}
 
-Two major sources:
+The data from Quiang et. al's study came from two sources:
 \begin{enumerate}
 \item The International Telecommunication Union World Telecommunication Indicators
-Database, from 2001-2011~\cite{itu}.
-\item The World Bank World Development Indicators Online Database, from
-1980-2011~\cite{wdi}.
+Database~\cite{itu} provides data on communications technology in over 200
+developed and developing regions. The specific metrics used for this study
+include mobile and cellular telephone subscriptions, overall fraction of the
+popultion using the Internet, and broadband penetration numbers, dating from
+2001-2011.
+\item The World Bank World Development Indicators Online Database~\cite{wdi}
+maintains over 1,500 metrics ranging from GDP to number of acres used for
+forestation across over 200 countries. We rely on this database for GDP, primary school enrollment
+rates, and investment share from 1980-2011.
 \end{enumerate}
 
-Any touching up / sanity checking I needed to do to the data
+The two databases differed in some ways, so I needed to perform some
+preprocessing on the data to make it useable. For example, I enumerated all
+country names, and converted all names to a canonacal format so that the
+datapoints could be matched up programatically between the two sources. In
+cases of ambiguity in which specific metrics Quiang et al. used for their
+analysis (e.g. raw GDP versus GDP adjusted for PPP), I experimented with the
+output to ensure that it closely matched Qiang's final results.
 
-Some processing on names was needed to canonacalize across the two datasets.
-
-NOTE: see scripts/README for additional notes on data analysis
-
-- Country classifications are taken from the World
-Bank. http://data.worldbank.org/income-level/NOC
-TODO: Citation
-
-The code used to perform this analysis is publicly available~\cite{github}.
+I also relied on country classifications from the World
+Bank~\cite{classifications}
+to bucket countries into high, low and middle income countries.
+These metrics were used as dummy variables in the regression
+analysis, described below.
 
 \subsection{Methodology}
 
@@ -51,6 +65,8 @@ exogenous model, etc.). The variables used in this regression are plotted over t
 in figure~\ref{fig:variables}.
 
 Fancy math equation for endogenous growth.
+
+The code used to perform this analysis is publicly available~\cite{github}.
 
 \begin{figure}[!ht]
 \label{fig:variables}
